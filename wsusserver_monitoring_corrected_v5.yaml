@@ -1,0 +1,366 @@
+zabbix_export:
+  version: '7.0'
+  templates:
+  - uuid: b0e07d8e4c0f4d2a8b5c9e3f1a7d6c8b
+    template: Template WSUS Monitoring
+    name: Template WSUS Monitoring
+    description: Template for monitoring Windows Server Update Services (WSUS) - Compatible with Zabbix 7.0
+    groups:
+    - name: Templates/Applications
+    items:
+    - uuid: f1e2d3c4b5a69788c7d6e5f4a3b2c1d0
+      name: "WSUS: Service Status"
+      type: ZABBIX_PASSIVE
+      key: service.info[WsusService,state]
+      delay: 1m
+      history: 7d
+      trends: 90d
+      value_type: UNSIGNED
+      tags:
+      - tag: component
+        value: wsus
+      - tag: service
+        value: wsus-main
+      valuemap:
+        name: Windows service state
+      description: Status do serviço principal do WSUS
+      triggers:
+      - uuid: 1a2b3c4d5e6f7a8b9c0d1e2f3a4b5c6d
+        expression: last(/Template WSUS Monitoring/service.info[WsusService,state])<>0
+        name: WSUS Service is not running on {HOST.NAME}
+        event_name: WSUS Service is not running on {HOST.NAME}
+        opdata: 'Current state: {ITEM.LASTVALUE1}'
+        priority: HIGH
+        description: O serviço principal do WSUS (WsusService) não está em execução.
+        tags:
+        - tag: scope
+          value: availability
+    - uuid: e2d3c4b5a69788c7d6e5f4a3b2c1d0f1
+      name: "WSUS: IIS Service Status"
+      type: ZABBIX_PASSIVE
+      key: service.info[W3SVC,state]
+      delay: 1m
+      history: 7d
+      trends: 90d
+      value_type: UNSIGNED
+      tags:
+      - tag: component
+        value: wsus
+      - tag: service
+        value: iis
+      valuemap:
+        name: Windows service state
+      description: Status do serviço IIS necessário para o WSUS
+      triggers:
+      - uuid: 2b3c4d5e6f7a8b9c0d1e2f3a4b5c6d1a
+        expression: last(/Template WSUS Monitoring/service.info[W3SVC,state])<>0
+        name: IIS Service for WSUS is not running on {HOST.NAME}
+        event_name: IIS Service for WSUS is not running on {HOST.NAME}
+        opdata: 'Current state: {ITEM.LASTVALUE1}'
+        priority: HIGH
+        description: O serviço World Wide Web Publishing Service (W3SVC), necessário para o WSUS, não está em execução.
+        tags:
+        - tag: scope
+          value: availability
+    - uuid: d3c4b5a69788c7d6e5f4a3b2c1d0f1e2
+      name: "WSUS: Windows Internal Database Status"
+      type: ZABBIX_PASSIVE
+      key: service.info[MSSQL$MICROSOFT##WID,state]
+      delay: 1m
+      history: 7d
+      trends: 90d
+      value_type: UNSIGNED
+      tags:
+      - tag: component
+        value: wsus
+      - tag: service
+        value: database
+      valuemap:
+        name: Windows service state
+      description: Status do Windows Internal Database usado pelo WSUS
+      triggers:
+      - uuid: 3c4d5e6f7a8b9c0d1e2f3a4b5c6d1a2b
+        expression: last(/Template WSUS Monitoring/service.info[MSSQL$MICROSOFT##WID,state])<>0
+        name: Windows Internal Database for WSUS is not running on {HOST.NAME}
+        event_name: Windows Internal Database for WSUS is not running on {HOST.NAME}
+        opdata: 'Current state: {ITEM.LASTVALUE1}'
+        priority: HIGH
+        description: O serviço Windows Internal Database (WID) usado pelo WSUS não está em execução.
+        tags:
+        - tag: scope
+          value: availability
+    - uuid: c4b5a69788c7d6e5f4a3b2c1d0f1e2d3
+      name: "WSUS: HTTP Port Availability"
+      type: SIMPLE
+      key: net.tcp.service[http,{HOST.CONN},8530]
+      delay: 5m
+      history: 7d
+      trends: 90d
+      value_type: UNSIGNED
+      tags:
+      - tag: component
+        value: wsus
+      - tag: connectivity
+        value: http
+      valuemap:
+        name: Service state
+      description: Verifica disponibilidade da porta HTTP 8530 do WSUS
+      triggers:
+      - uuid: 4d5e6f7a8b9c0d1e2f3a4b5c6d1a2b3c
+        expression: last(/Template WSUS Monitoring/net.tcp.service[http,{HOST.CONN},8530])=0
+        name: WSUS HTTP Port is not responding on {HOST.NAME}
+        event_name: WSUS HTTP Port is not responding on {HOST.NAME}
+        opdata: 'Port 8530 status: {ITEM.LASTVALUE1}'
+        priority: HIGH
+        description: A porta HTTP 8530 do WSUS não está respondendo.
+        tags:
+        - tag: scope
+          value: availability
+    - uuid: b5a69788c7d6e5f4a3b2c1d0f1e2d3c4
+      name: "WSUS: HTTPS Port Availability"
+      type: SIMPLE
+      key: net.tcp.service[https,{HOST.CONN},8531]
+      delay: 5m
+      history: 7d
+      trends: 90d
+      value_type: UNSIGNED
+      tags:
+      - tag: component
+        value: wsus
+      - tag: connectivity
+        value: https
+      valuemap:
+        name: Service state
+      description: Verifica disponibilidade da porta HTTPS 8531 do WSUS
+      triggers:
+      - uuid: 5e6f7a8b9c0d1e2f3a4b5c6d1a2b3c4d
+        expression: last(/Template WSUS Monitoring/net.tcp.service[https,{HOST.CONN},8531])=0
+        name: WSUS HTTPS Port is not responding on {HOST.NAME}
+        event_name: WSUS HTTPS Port is not responding on {HOST.NAME}
+        opdata: 'Port 8531 status: {ITEM.LASTVALUE1}'
+        priority: AVERAGE
+        description: A porta HTTPS 8531 do WSUS não está respondendo.
+        tags:
+        - tag: scope
+          value: availability
+    - uuid: a69788c7d6e5f4a3b2c1d0f1e2d3c4b5
+      name: "WSUS: HTTP Response Time"
+      type: SIMPLE
+      key: net.tcp.service.perf[http,{HOST.CONN},8530]
+      delay: 5m
+      history: 7d
+      trends: 90d
+      value_type: FLOAT
+      units: s
+      tags:
+      - tag: component
+        value: wsus
+      - tag: performance
+        value: response-time
+      description: Tempo de resposta da porta HTTP 8530 do WSUS
+      triggers:
+      - uuid: 6f7a8b9c0d1e2f3a4b5c6d1a2b3c4d5e
+        expression: avg(/Template WSUS Monitoring/net.tcp.service.perf[http,{HOST.CONN},8530],5m)>{$WSUS.RESPONSE.TIME.MAX}
+        name: WSUS HTTP Response Time is high on {HOST.NAME}
+        event_name: WSUS HTTP Response Time is high on {HOST.NAME}
+        opdata: 'Response time: {ITEM.LASTVALUE1}s'
+        priority: WARNING
+        description: O tempo de resposta HTTP do WSUS está alto (>{$WSUS.RESPONSE.TIME.MAX} segundos).
+        tags:
+        - tag: scope
+          value: performance
+    - uuid: 9788c7d6e5f4a3b2c1d0f1e2d3c4b5a6
+      name: "WSUS: HTTPS Response Time"
+      type: SIMPLE
+      key: net.tcp.service.perf[https,{HOST.CONN},8531]
+      delay: 5m
+      history: 7d
+      trends: 90d
+      value_type: FLOAT
+      units: s
+      tags:
+      - tag: component
+        value: wsus
+      - tag: performance
+        value: response-time
+      description: Tempo de resposta da porta HTTPS 8531 do WSUS
+      triggers:
+      - uuid: 7a8b9c0d1e2f3a4b5c6d1a2b3c4d5e6f
+        expression: avg(/Template WSUS Monitoring/net.tcp.service.perf[https,{HOST.CONN},8531],5m)>{$WSUS.RESPONSE.TIME.MAX}
+        name: WSUS HTTPS Response Time is high on {HOST.NAME}
+        event_name: WSUS HTTPS Response Time is high on {HOST.NAME}
+        opdata: 'Response time: {ITEM.LASTVALUE1}s'
+        priority: WARNING
+        description: O tempo de resposta HTTPS do WSUS está alto (>{$WSUS.RESPONSE.TIME.MAX} segundos).
+        tags:
+        - tag: scope
+          value: performance
+    - uuid: 788c7d6e5f4a3b2c1d0f1e2d3c4b5a69
+      name: "WSUS: Content Directory Free Space %"
+      type: ZABBIX_PASSIVE
+      key: vfs.fs.size[{$WSUS.CONTENT.PATH},pfree]
+      delay: 10m
+      history: 7d
+      trends: 90d
+      value_type: FLOAT
+      units: '%'
+      tags:
+      - tag: component
+        value: wsus
+      - tag: storage
+        value: content-directory
+      description: Percentual de espaço livre no diretório de conteúdo do WSUS
+      triggers:
+      - uuid: 8b9c0d1e2f3a4b5c6d1a2b3c4d5e6f7a
+        expression: last(/Template WSUS Monitoring/vfs.fs.size[{$WSUS.CONTENT.PATH},pfree])<{$WSUS.DISK.FREE.WARN}
+        name: WSUS Content Directory low free space on {HOST.NAME}
+        event_name: WSUS Content Directory low free space on {HOST.NAME}
+        opdata: 'Free space: {ITEM.LASTVALUE1}%'
+        priority: WARNING
+        description: O espaço livre no diretório de conteúdo do WSUS está baixo (<{$WSUS.DISK.FREE.WARN}%).
+        tags:
+        - tag: scope
+          value: capacity
+      - uuid: 9c0d1e2f3a4b5c6d1a2b3c4d5e6f7a8b
+        expression: last(/Template WSUS Monitoring/vfs.fs.size[{$WSUS.CONTENT.PATH},pfree])<{$WSUS.DISK.FREE.CRIT}
+        name: WSUS Content Directory critically low free space on {HOST.NAME}
+        event_name: WSUS Content Directory critically low free space on {HOST.NAME}
+        opdata: 'Free space: {ITEM.LASTVALUE1}%'
+        priority: HIGH
+        description: O espaço livre no diretório de conteúdo do WSUS está criticamente baixo (<{$WSUS.DISK.FREE.CRIT}%).
+        tags:
+        - tag: scope
+          value: capacity
+    - uuid: 88c7d6e5f4a3b2c1d0f1e2d3c4b5a697
+      name: "WSUS: Content Directory Free Space"
+      type: ZABBIX_PASSIVE
+      key: vfs.fs.size[{$WSUS.CONTENT.PATH},free]
+      delay: 10m
+      history: 7d
+      trends: 90d
+      value_type: UNSIGNED
+      units: B
+      tags:
+      - tag: component
+        value: wsus
+      - tag: storage
+        value: content-directory
+      description: Espaço livre em bytes no diretório de conteúdo do WSUS
+    - uuid: 8c7d6e5f4a3b2c1d0f1e2d3c4b5a6978
+      name: "WSUS: Content Directory Total Space"
+      type: ZABBIX_PASSIVE
+      key: vfs.fs.size[{$WSUS.CONTENT.PATH},total]
+      delay: 1h
+      history: 7d
+      trends: 90d
+      value_type: UNSIGNED
+      units: B
+      tags:
+      - tag: component
+        value: wsus
+      - tag: storage
+        value: content-directory
+      description: Espaço total do diretório de conteúdo do WSUS
+    - uuid: 7d6e5f4a3b2c1d0f1e2d3c4b5a69788c
+      name: "WSUS: Pending Updates Count"
+      type: ZABBIX_PASSIVE
+      key: wsus.updates[pending]
+      delay: 1h
+      history: 7d
+      trends: 90d
+      value_type: UNSIGNED
+      tags:
+      - tag: component
+        value: wsus
+      - tag: updates
+        value: pending
+      description: Número de atualizações pendentes no WSUS
+      triggers:
+      - uuid: a8b9c0d1e2f3a4b5c6d1a2b3c4d5e6f7
+        expression: last(/Template WSUS Monitoring/wsus.updates[pending])>{$WSUS.UPDATES.PENDING.MAX}
+        name: High number of pending updates on {HOST.NAME}
+        event_name: High number of pending updates on {HOST.NAME}
+        opdata: 'Pending updates: {ITEM.LASTVALUE1}'
+        priority: WARNING
+        description: O número de atualizações pendentes no WSUS está alto (>{$WSUS.UPDATES.PENDING.MAX}).
+        tags:
+        - tag: scope
+          value: updates
+    - uuid: 6e5f4a3b2c1d0f1e2d3c4b5a69788c7d
+      name: "WSUS: Approved Updates Count"
+      type: ZABBIX_PASSIVE
+      key: wsus.updates[approved]
+      delay: 1h
+      history: 7d
+      trends: 90d
+      value_type: UNSIGNED
+      tags:
+      - tag: component
+        value: wsus
+      - tag: updates
+        value: approved
+      description: Número de atualizações aprovadas no WSUS
+    - uuid: 5f4a3b2c1d0f1e2d3c4b5a69788c7d6e
+      name: "WSUS: Declined Updates Count"
+      type: ZABBIX_PASSIVE
+      key: wsus.updates[declined]
+      delay: 1h
+      history: 7d
+      trends: 90d
+      value_type: UNSIGNED
+      tags:
+      - tag: component
+        value: wsus
+      - tag: updates
+        value: declined
+      description: Número de atualizações recusadas no WSUS
+    - uuid: 4a3b2c1d0f1e2d3c4b5a69788c7d6e5f
+      name: "WSUS: Computers Needing Updates"
+      type: ZABBIX_PASSIVE
+      key: wsus.computers[needing_updates]
+      delay: 1h
+      history: 7d
+      trends: 90d
+      value_type: UNSIGNED
+      tags:
+      - tag: component
+        value: wsus
+      - tag: computers
+        value: needing-updates
+      description: Número de computadores que precisam de atualizações no WSUS
+      triggers:
+      - uuid: b9c0d1e2f3a4b5c6d1a2b3c4d5e6f7a8
+        expression: last(/Template WSUS Monitoring/wsus.computers[needing_updates])>{$WSUS.COMPUTERS.NEEDING.UPDATES.MAX}
+        name: High number of computers needing updates on {HOST.NAME}
+        event_name: High number of computers needing updates on {HOST.NAME}
+        opdata: 'Computers needing updates: {ITEM.LASTVALUE1}'
+        priority: HIGH
+        description: O número de computadores que precisam de atualizações no WSUS está alto (>{$WSUS.COMPUTERS.NEEDING.UPDATES.MAX}).
+        tags:
+        - tag: scope
+          value: updates
+    macros:
+    - macro: '{$WSUS.HTTP.PORT}'
+      value: '8530'
+      description: "Porta HTTP do WSUS"
+    - macro: '{$WSUS.HTTPS.PORT}'
+      value: '8531'
+      description: "Porta HTTPS do WSUS"
+    - macro: '{$WSUS.CONTENT.PATH}'
+      value: C:\WSUS
+      description: "Caminho do diretório de conteúdo do WSUS"
+    - macro: '{$WSUS.RESPONSE.TIME.MAX}'
+      value: '5'
+      description: "Tempo máximo de resposta aceitável em segundos"
+    - macro: '{$WSUS.DISK.FREE.WARN}'
+      value: '10'
+      description: "Limite de aviso para espaço livre (percentual)"
+    - macro: '{$WSUS.DISK.FREE.CRIT}'
+      value: '5'
+      description: "Limite crítico para espaço livre (percentual)"
+    - macro: '{$WSUS.UPDATES.PENDING.MAX}'
+      value: '100'
+      description: "Número máximo de atualizações pendentes antes de acionar alerta"
+    - macro: '{$WSUS.COMPUTERS.NEEDING.UPDATES.MAX}'
+      value: '50'
+      description: "Número máximo de computadores precisando de atualizações antes de acionar alerta"
