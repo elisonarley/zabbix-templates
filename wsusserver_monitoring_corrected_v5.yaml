@@ -1,14 +1,14 @@
 zabbix_export:
   version: '7.0'
   templates:
-  - uuid: 123e4567e89b42d3a456426614174000
+  - uuid: 7a8c9d0e1f2a4b3c8d1e0f9a8b7c6d5e
     template: Template WSUS Monitoring
     name: Template WSUS Monitoring
     description: Template for monitoring Windows Server Update Services (WSUS) - Compatible with Zabbix 7.0
     groups:
     - name: Templates/Applications
     items:
-    - uuid: f1e2d3c4b5a64d789c0d426614174001
+    - uuid: 1b2c3d4e5f6a4b3c9d1e0f9a8b7c6d5e
       name: "WSUS: Service Status"
       type: ZABBIX_PASSIVE
       key: service.info[WsusService,state]
@@ -23,7 +23,7 @@ zabbix_export:
         value: wsus-main
       description: Status do serviço principal do WSUS
       triggers:
-      - uuid: 2b3c4d5e6f7a48b99c0d426614174002
+      - uuid: 2c3d4e5f6a7b4c3dad1e0f9a8b7c6d5e
         expression: last(/Template WSUS Monitoring/service.info[WsusService,state])<>0
         name: WSUS Service is not running on {HOST.NAME}
         event_name: WSUS Service is not running on {HOST.NAME}
@@ -33,7 +33,7 @@ zabbix_export:
         tags:
         - tag: scope
           value: availability
-    - uuid: e2d3c4b5a6974d789c0d426614174003
+    - uuid: 3d4e5f6a7b8c4d3ebd1e0f9a8b7c6d5e
       name: "WSUS: IIS Service Status"
       type: ZABBIX_PASSIVE
       key: service.info[W3SVC,state]
@@ -48,7 +48,7 @@ zabbix_export:
         value: iis
       description: Status do serviço IIS necessário para o WSUS
       triggers:
-      - uuid: 3c4d5e6f7a8b49c09d1e426614174004
+      - uuid: 4e5f6a7b8c9d4e3f8d1e0f9a8b7c6d5e
         expression: last(/Template WSUS Monitoring/service.info[W3SVC,state])<>0
         name: IIS Service for WSUS is not running on {HOST.NAME}
         event_name: IIS Service for WSUS is not running on {HOST.NAME}
@@ -58,7 +58,7 @@ zabbix_export:
         tags:
         - tag: scope
           value: availability
-    - uuid: d3c4b5a697884d789c0d426614174005
+    - uuid: 5f6a7b8c9d0e4f3a9d1e0f9a8b7c6d5e
       name: "WSUS: Windows Internal Database Status"
       type: ZABBIX_PASSIVE
       key: service.info[MSSQL$MICROSOFT##WID,state]
@@ -73,7 +73,7 @@ zabbix_export:
         value: database
       description: Status do Windows Internal Database usado pelo WSUS
       triggers:
-      - uuid: 4d5e6f7a8b9c4ad19e2f426614174006
+      - uuid: 6a7b8c9d0e1f4a3bad1e0f9a8b7c6d5e
         expression: last(/Template WSUS Monitoring/service.info[MSSQL$MICROSOFT##WID,state])<>0
         name: Windows Internal Database for WSUS is not running on {HOST.NAME}
         event_name: Windows Internal Database for WSUS is not running on {HOST.NAME}
@@ -83,7 +83,7 @@ zabbix_export:
         tags:
         - tag: scope
           value: availability
-    - uuid: c4b5a69788c74d789c0d426614174007
+    - uuid: 7b8c9d0e1f2a4b3cbd1e0f9a8b7c6d5e
       name: "WSUS: HTTP Port Availability"
       type: SIMPLE
       key: net.tcp.service[http,{HOST.CONN},8530]
@@ -98,7 +98,7 @@ zabbix_export:
         value: http
       description: Verifica disponibilidade da porta HTTP 8530 do WSUS
       triggers:
-      - uuid: 5e6f7a8b9c0d4be29f3a426614174008
+      - uuid: 8c9d0e1f2a3b4c3d8d1e0f9a8b7c6d5e
         expression: last(/Template WSUS Monitoring/net.tcp.service[http,{HOST.CONN},8530])=0
         name: WSUS HTTP Port is not responding on {HOST.NAME}
         event_name: WSUS HTTP Port is not responding on {HOST.NAME}
@@ -108,7 +108,7 @@ zabbix_export:
         tags:
         - tag: scope
           value: availability
-    - uuid: b5a69788c7d64d789c0d426614174009
+    - uuid: 9d0e1f2a3b4c4d3e9d1e0f9a8b7c6d5e
       name: "WSUS: HTTPS Port Availability"
       type: SIMPLE
       key: net.tcp.service[https,{HOST.CONN},8531]
@@ -123,7 +123,7 @@ zabbix_export:
         value: https
       description: Verifica disponibilidade da porta HTTPS 8531 do WSUS
       triggers:
-      - uuid: 6f7a8b9c0d1e4cf3a04b42661417400a
+      - uuid: a0e1f2a3b4c54e3fad1e0f9a8b7c6d5e
         expression: last(/Template WSUS Monitoring/net.tcp.service[https,{HOST.CONN},8531])=0
         name: WSUS HTTPS Port is not responding on {HOST.NAME}
         event_name: WSUS HTTPS Port is not responding on {HOST.NAME}
@@ -133,7 +133,7 @@ zabbix_export:
         tags:
         - tag: scope
           value: availability
-    - uuid: a69788c7d6e54d789c0d42661417400b
+    - uuid: b1f2a3b4c5d64f3abd1e0f9a8b7c6d5e
       name: "WSUS: HTTP Response Time"
       type: SIMPLE
       key: net.tcp.service.perf[http,{HOST.CONN},8530]
@@ -149,7 +149,7 @@ zabbix_export:
         value: response-time
       description: Tempo de resposta da porta HTTP 8530 do WSUS
       triggers:
-      - uuid: 7a8b9c0d1e2f4df4b15c42661417400c
+      - uuid: c2a3b4c5d6e74a3b8d1e0f9a8b7c6d5e
         expression: avg(/Template WSUS Monitoring/net.tcp.service.perf[http,{HOST.CONN},8530],5m)>{$WSUS.RESPONSE.TIME.MAX}
         name: WSUS HTTP Response Time is high on {HOST.NAME}
         event_name: WSUS HTTP Response Time is high on {HOST.NAME}
@@ -159,7 +159,7 @@ zabbix_export:
         tags:
         - tag: scope
           value: performance
-    - uuid: 9788c7d6e5f44d789c0d42661417400d
+    - uuid: d3b4c5d6e7f84b3c9d1e0f9a8b7c6d5e
       name: "WSUS: HTTPS Response Time"
       type: SIMPLE
       key: net.tcp.service.perf[https,{HOST.CONN},8531]
@@ -175,7 +175,7 @@ zabbix_export:
         value: response-time
       description: Tempo de resposta da porta HTTPS 8531 do WSUS
       triggers:
-      - uuid: 8b9c0d1e2f3a4ef5c26d42661417400e
+      - uuid: e4c5d6e7f8a94c3dad1e0f9a8b7c6d5e
         expression: avg(/Template WSUS Monitoring/net.tcp.service.perf[https,{HOST.CONN},8531],5m)>{$WSUS.RESPONSE.TIME.MAX}
         name: WSUS HTTPS Response Time is high on {HOST.NAME}
         event_name: WSUS HTTPS Response Time is high on {HOST.NAME}
@@ -185,7 +185,7 @@ zabbix_export:
         tags:
         - tag: scope
           value: performance
-    - uuid: 788c7d6e5f4a4d789c0d42661417400f
+    - uuid: f5d6e7f8a9b04d3ebd1e0f9a8b7c6d5e
       name: "WSUS: Content Directory Free Space %"
       type: ZABBIX_PASSIVE
       key: vfs.fs.size[{$WSUS.CONTENT.PATH},pfree]
@@ -201,7 +201,7 @@ zabbix_export:
         value: content-directory
       description: Percentual de espaço livre no diretório de conteúdo do WSUS
       triggers:
-      - uuid: 9c0d1e2f3a4b4ff6d37e426614174010
+      - uuid: 06e7f8a9b0c14e3f8d1e0f9a8b7c6d5e
         expression: last(/Template WSUS Monitoring/vfs.fs.size[{$WSUS.CONTENT.PATH},pfree])<{$WSUS.DISK.FREE.WARN}
         name: WSUS Content Directory low free space on {HOST.NAME}
         event_name: WSUS Content Directory low free space on {HOST.NAME}
@@ -211,7 +211,7 @@ zabbix_export:
         tags:
         - tag: scope
           value: capacity
-      - uuid: a0d1e2f34b5c40f7e48f426614174011
+      - uuid: 17f8a9b0c1d24f3a9d1e0f9a8b7c6d5e
         expression: last(/Template WSUS Monitoring/vfs.fs.size[{$WSUS.CONTENT.PATH},pfree])<{$WSUS.DISK.FREE.CRIT}
         name: WSUS Content Directory critically low free space on {HOST.NAME}
         event_name: WSUS Content Directory critically low free space on {HOST.NAME}
@@ -221,7 +221,7 @@ zabbix_export:
         tags:
         - tag: scope
           value: capacity
-    - uuid: 88c7d6e5f4a34d789c0d426614174012
+    - uuid: 28a9b0c1d2e34a3bad1e0f9a8b7c6d5e
       name: "WSUS: Content Directory Free Space"
       type: ZABBIX_PASSIVE
       key: vfs.fs.size[{$WSUS.CONTENT.PATH},free]
@@ -236,7 +236,7 @@ zabbix_export:
       - tag: storage
         value: content-directory
       description: Espaço livre em bytes no diretório de conteúdo do WSUS
-    - uuid: 8c7d6e5f4a3b4d789c0d426614174013
+    - uuid: 39b0c1d2e3f44b3cbd1e0f9a8b7c6d5e
       name: "WSUS: Content Directory Total Space"
       type: ZABBIX_PASSIVE
       key: vfs.fs.size[{$WSUS.CONTENT.PATH},total]
@@ -251,7 +251,7 @@ zabbix_export:
       - tag: storage
         value: content-directory
       description: Espaço total do diretório de conteúdo do WSUS
-    - uuid: 7d6e5f4a3b2c4d789c0d426614174014
+    - uuid: 4a0c1d2e3f4a4c3d8d1e0f9a8b7c6d5e
       name: "WSUS: Pending Updates Count"
       type: ZABBIX_PASSIVE
       key: wsus.updates[pending]
@@ -266,7 +266,7 @@ zabbix_export:
         value: pending
       description: Número de atualizações pendentes no WSUS
       triggers:
-      - uuid: a8b9c0d1e2f34af8b59a426614174015
+      - uuid: 5b1d2e3f4a5b4d3e9d1e0f9a8b7c6d5e
         expression: last(/Template WSUS Monitoring/wsus.updates[pending])>{$WSUS.UPDATES.PENDING.MAX}
         name: High number of pending updates on {HOST.NAME}
         event_name: High number of pending updates on {HOST.NAME}
@@ -276,7 +276,7 @@ zabbix_export:
         tags:
         - tag: scope
           value: updates
-    - uuid: 6e5f4a3b2c1d4d789c0d426614174016
+    - uuid: 6c2e3f4a5b6c4e3fad1e0f9a8b7c6d5e
       name: "WSUS: Approved Updates Count"
       type: ZABBIX_PASSIVE
       key: wsus.updates[approved]
@@ -290,7 +290,7 @@ zabbix_export:
       - tag: updates
         value: approved
       description: Número de atualizações aprovadas no WSUS
-    - uuid: 5f4a3b2c1d0f4d789c0d426614174017
+    - uuid: 7d3f4a5b6c7d4f3abd1e0f9a8b7c6d5e
       name: "WSUS: Declined Updates Count"
       type: ZABBIX_PASSIVE
       key: wsus.updates[declined]
@@ -304,7 +304,7 @@ zabbix_export:
       - tag: updates
         value: declined
       description: Número de atualizações recusadas no WSUS
-    - uuid: 4a3b2c1d0f1e4d789c0d426614174018
+    - uuid: 8e4a5b6c7d8e4a3b8d1e0f9a8b7c6d5e
       name: "WSUS: Computers Needing Updates"
       type: ZABBIX_PASSIVE
       key: wsus.computers[needing_updates]
@@ -319,7 +319,7 @@ zabbix_export:
         value: needing-updates
       description: Número de computadores que precisam de atualizações no WSUS
       triggers:
-      - uuid: b9c0d1e2f3a44bf9c6ab426614174019
+      - uuid: 9f5b6c7d8e9f4b3c9d1e0f9a8b7c6d5e
         expression: last(/Template WSUS Monitoring/wsus.computers[needing_updates])>{$WSUS.COMPUTERS.NEEDING.UPDATES.MAX}
         name: High number of computers needing updates on {HOST.NAME}
         event_name: High number of computers needing updates on {HOST.NAME}
